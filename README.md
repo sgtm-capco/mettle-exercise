@@ -1,3 +1,8 @@
+##Requirements to run the application:
+
+Java 11
+Gradle
+
 ### View all books
 `curl -u user:password http://localhost:8080/books`
 
