@@ -1,38 +1,40 @@
-### View all books
-`curl -u user:password http://localhost:8080/books`
+##Requirements to run the application:
+- Java 11
+- Gradle
 
-### Add Books - this will return 403
-`curl -u user:password --request POST 'http://localhost:8080/book' \
-    --header 'Authorization: Basic' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-    "name": "2 Rich Dad Poor Dad",
-    "author": "Robert Kiyosaki",
-    "price": 10.99 }'`
+#### Application is protected with basic auth. There are two users:
+```
+- userName: admin password: password - Permissions to create/update/view features and assign features 
+- userName: user password: password -Permission to view features 
+```
 
-### View the authorities on user
-`curl -u admin:password http://localhost:8080/users/user   -> {"id":2,"userName":"user","password":"password","
-authorities":"READ_AUTHORITY"}`
-
-### Update the authorities on user
-`curl -u admin:password --request PUT 'http://localhost:8080/users/user/roles' \
---header 'Authorization: Basic' \
---header 'Content-Type: application/json' \
---data-raw '["READ_AUTHORITY","WRITE_AUTHORITY"]'`
-
-### Try adding the book -- this should return 200
-`curl -u user:password --request POST 'http://localhost:8080/book' \
---header 'Authorization: Basic' \
---header 'Content-Type: application/json' \
---data-raw '{
-"name": "2 Rich Dad Poor Dad",
-"author": "Robert Kiyosaki",
-"price": 10.99 }'`
-
-### View all books
-`curl -u user:password http://localhost:8080/books`
-
+### Default features:
+```[
+{
+"id": 3,
+"name": "Feature 1",
+"globallyEnabled": true
+},
+{
+"id": 4,
+"name": "Feature 2",
+"globallyEnabled": false
+},
+{
+"id": 5,
+"name": "Feature 3",
+"globallyEnabled": false
+},
+{
+"id": 6,
+"name": "Feature 4",
+"globallyEnabled": true
+}
+]
+```
+``
+Admin end-points - 
+``
 ### Possible improvements
-- Add JWT
-- Add the authority within the roles
-- Exception handling
+- Add Unit and Integration testing
+- Protect end points with JWT

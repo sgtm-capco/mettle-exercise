@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -14,16 +16,12 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Column(name = "user_id")
+    private Long id;
     private String userName;
     private String password;
-    //    Roles is a comma separated list
     private String authorities;
-
-/*    TODO:
-Make roles as a set of RoleType and authority on each role type
-@ManyToMany
-private Set<Role> roles;
- */
-
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "features", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "feature_id"))
+    private Set<Feature> features = new HashSet<>();
 }

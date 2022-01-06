@@ -1,39 +1,40 @@
 package com.mettle.exercise;
 
-import com.mettle.exercise.model.Book;
+import com.mettle.exercise.model.Feature;
 import com.mettle.exercise.model.User;
-import com.mettle.exercise.repository.BookRepository;
+import com.mettle.exercise.repository.FeatureRepository;
 import com.mettle.exercise.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 
 
 @SpringBootApplication
-@AllArgsConstructor
 public class ExerciseApplication {
-
-    private BookRepository bookRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FeatureRepository featureRepository;
 
-
-    //	Populating user and books with dummy data
     @PostConstruct
     private void populateUsersAndBooks() {
-        List books = List.of(new Book("The Choice", "Edith Eger", 9.99),
-                new Book("Rich Dad Poor Dad", "Robert Kiyosaki", 10.99));
-        bookRepository.saveAll(books);
 
-        List users = List.of(new User(1, "admin", "password", "READ_AUTHORITY,WRITE_AUTHORITY,DELETE_AUTHORITY,ACCESS_ALL_AUTHORITY"),
-                new User(2, "user", "password", "READ_AUTHORITY"));
+        List users = List.of(new User(null, "admin", "password", "ADMIN", Collections.emptySet()),
+                new User(null, "user", "password", "USER", Collections.emptySet()));
         userRepository.saveAll(users);
+
+        List features = List.of(new Feature(null, "Feature 1", true),
+                new Feature(null, "Feature 2", false),
+                new Feature(null, "Feature 3", false),
+                new Feature(null, "Feature 4", true));
+        featureRepository.saveAll(features);
     }
 
     public static void main(String[] args) {
         SpringApplication.run(ExerciseApplication.class, args);
     }
-
 }

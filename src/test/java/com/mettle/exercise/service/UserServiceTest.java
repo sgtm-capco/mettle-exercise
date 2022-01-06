@@ -2,14 +2,19 @@ package com.mettle.exercise.service;
 
 
 import com.mettle.exercise.model.User;
+import com.mettle.exercise.repository.FeatureRepository;
 import com.mettle.exercise.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,18 +28,19 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private FeatureRepository featureRepository;
 
     @Test
-    public void findUserByUserName() {
+    public void returnUserDetailsWhenLoadUserByUsernameIsInvoked() {
 //        given
         when(userRepository.findByUserName("sgtm"))
-                .thenReturn(new User(1, "sgtm", "password", "ACCESS_ALL_AUTHORITY"));
+                .thenReturn(new User(null, "sgtm", null, "ADMIN", Collections.emptySet()));
 //        when
-        User user = userService.getUserByUserName("sgtm");
+        UserDetails user = userService.loadUserByUsername("sgtm");
 //        then
         assertNotNull(user);
-        assertEquals(user.getUserName(), "sgtm");
-        assertEquals(user.getAuthorities(), "ACCESS_ALL_AUTHORITY");
+        assertEquals("sgtm", user.getUsername());
     }
 
     @Test
@@ -43,20 +49,9 @@ public class UserServiceTest {
         when(userRepository.findByUserName("sgtm")).thenReturn(null);
 //        when
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> {
-            userService.getUserByUserName("sgtm");
+            userService.loadUserByUsername("sgtm");
         });
         assertTrue(exception.getMessage().contains("User Not found: sgtm"));
     }
-
-    @Test
-    public void updateUserDetails() {
-//        given
-        when(userRepository.findByUserName("sgtm"))
-                .thenReturn(new User(1, "sgtm", "password", "ACCESS_ALL_AUTHORITY"));
-//        when
-        User user = userService.updateUserRoles("sgtm", List.of("ACCESS_ALL_AUTHORITY", "READ_AUTHORITY", "WRITE_AUTHORITY"));
-//        then
-        assertEquals(user.getUserName(), "sgtm");
-        assertEquals(user.getAuthorities(), "ACCESS_ALL_AUTHORITY,READ_AUTHORITY,WRITE_AUTHORITY");
-    }
+//    TODO: Add more unit test
 }
